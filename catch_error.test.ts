@@ -1,5 +1,5 @@
 import {expect, test} from "vitest";
-import {catch_error} from "./catch_error";
+import {catch_error} from "./src/index";
 
 test("Async function examples", async () => {
     const throw_error = async () => {

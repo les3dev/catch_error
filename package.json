@@ -1,8 +1,41 @@
 {
-    "scripts": {
-        "test": "vitest"
+    "name": "@les3dev/catch_error",
+    "version": "1.0.0",
+    "description": "A tiny helper that turns thrown errors into values you can branch on",
+    "keywords": [
+        "error",
+        "error-handling",
+        "result",
+        "try-catch",
+        "typescript"
+    ],
+    "license": "MIT",
+    "author": "les3dev",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/les3dev/catch_error"
     },
-    "dependencies": {
+    "main": "./dist/index.js",
+    "module": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js",
+            "module": "./dist/index.js",
+            "default": "./dist/index.js"
+        }
+    },
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "build": "tsc",
+        "test": "vitest",
+        "lint": "tsc --noEmit"
+    },
+    "devDependencies": {
+        "typescript": "^5.0.0",
         "vitest": "^4.0.17"
     }
 }
