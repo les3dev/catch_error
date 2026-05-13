@@ -1,6 +1,6 @@
 {
     "name": "@les3dev/catch_error",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "type": "module",
     "description": "A tiny helper that turns thrown errors into values you can branch on",
     "keywords": [
@@ -36,7 +36,7 @@
         "lint": "tsc --noEmit"
     },
     "devDependencies": {
-        "typescript": "^5.0.0",
-        "vitest": "^4.0.17"
+        "typescript": "^6.0.3",
+        "vitest": "^4.1.6"
     }
 }
