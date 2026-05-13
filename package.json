@@ -1,6 +1,7 @@
 {
     "name": "@les3dev/catch_error",
-    "version": "1.0.0",
+    "version": "1.0.1",
+    "type": "module",
     "description": "A tiny helper that turns thrown errors into values you can branch on",
     "keywords": [
         "error",
