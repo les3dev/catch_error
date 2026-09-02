@@ -15,21 +15,24 @@ A tiny helper inspired by Rust's `Result` type that turns thrown errors into val
 
 The `catch_error` helper runs a sync function or accepts a `Promise` and returns either the successful value or an `Error` instance with a TypeScript union type. Instead of throwing, failures are returned so callers can check `instanceof Error` and handle errors inline.
 
-> See the implementation in [catch_error.ts](catch_error.ts).
+> See the implementation in [src/index.ts](src/index.ts).
 
 ## API
 
 - `catch_error(fn: () => T): T | Error` — runs `fn` and returns either the value or an `Error`.
-- `catch_error(promise: Promise<T>): Promise<T | Error>` — returns a promise that resolves to either the value or an `Error`.
+- `catch_error(async_fn: () => Promise<T>): Promise<T | Error>` — returns a promise that resolves to either the value or an `Error`.
+- `normalize_error(err: unknown): Error` — coerces any thrown value into an `Error`; use `normalize_error(err).message` when you only need the message.
 
-Errors that are not `Error` instances are wrapped in a fallback `Error` with a helpful message.
+Always pass a **function**, never a `Promise` directly: errors thrown before the promise is created would otherwise escape the safety boundary.
+
+Errors that are not `Error` instances are wrapped in a fallback `Error` with a helpful message. `normalize_error` recognises `Error` instances, `{body: {message}}` envelopes (as returned by some http clients), `{message}` objects and strings, before falling back to a generic message.
 
 ## Examples
 
 Sync example:
 
 ```ts
-import {catch_error} from "./catch_error"; // or from the published package
+import {catch_error} from "@les3dev/catch_error";
 
 function parseIntStrict(s: string) {
     if (!/^-?\d+$/.test(s)) throw new Error("not an integer");
@@ -49,9 +52,9 @@ if (result instanceof Error) {
 Async example:
 
 ```ts
-import {catch_error} from "./catch_error";
+import {catch_error} from "@les3dev/catch_error";
 
-const valueOrErr = await catch_error(fetch_data());
+const valueOrErr = await catch_error(() => fetch_data());
 if (valueOrErr instanceof Error) {
     // handle error
     console.error("fetch failed", valueOrErr);

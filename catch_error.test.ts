@@ -1,5 +1,5 @@
 import {expect, test} from "vitest";
-import {catch_error} from "./src/index";
+import {catch_error, normalize_error} from "./src/index";
 
 test("Async function examples", async () => {
     const throw_error = async () => {
@@ -118,7 +118,7 @@ test("Sync non-error thrown value — number", () => {
 
     expect(result).toBeInstanceOf(Error);
     if (result instanceof Error) {
-        expect(result.message).toBe("Thrown value of type number that doesn't extends Error: 404");
+        expect(result.message).toBe("Thrown value of type number that doesn't extend Error: 404");
     }
 });
 
@@ -131,7 +131,7 @@ test("Sync non-error thrown value — null", () => {
 
     expect(result).toBeInstanceOf(Error);
     if (result instanceof Error) {
-        expect(result.message).toBe("Thrown value of type object that doesn't extends Error: null");
+        expect(result.message).toBe("Thrown value of type object that doesn't extend Error: null");
     }
 });
 
@@ -144,7 +144,7 @@ test("Sync non-error thrown value — boolean", () => {
 
     expect(result).toBeInstanceOf(Error);
     if (result instanceof Error) {
-        expect(result.message).toBe("Thrown value of type boolean that doesn't extends Error: false");
+        expect(result.message).toBe("Thrown value of type boolean that doesn't extend Error: false");
     }
 });
 
@@ -212,4 +212,26 @@ test("System JS error (ReferenceError)", () => {
         expect(result.name).toBe("ReferenceError");
         expect(result.message).toBe("not_defined_variable is not defined");
     }
+});
+
+test("Sync non-error thrown value — error envelope with body.message", () => {
+    const throw_envelope = () => {
+        throw {status: 404, body: {message: "not found"}};
+    };
+
+    const result = catch_error(throw_envelope);
+
+    expect(result).toBeInstanceOf(Error);
+    if (result instanceof Error) {
+        expect(result.message).toBe("not found");
+    }
+});
+
+test("normalize_error coerces any value", () => {
+    const error = new Error("kept as is");
+    expect(normalize_error(error)).toBe(error);
+    expect(normalize_error({body: {message: "from body"}}).message).toBe("from body");
+    expect(normalize_error({message: "from message"}).message).toBe("from message");
+    expect(normalize_error("Error: prefixed").message).toBe("prefixed");
+    expect(normalize_error(404).message).toBe("Thrown value of type number that doesn't extend Error: 404");
 });
